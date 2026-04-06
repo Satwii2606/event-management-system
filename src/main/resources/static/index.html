@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Event Management System</title>
+</head>
+<body>
+
+<h1>Event Management System</h1>
+
+<!-- ================= EVENT LIST ================= -->
+<h2>Event List</h2>
+<button onclick="loadEvents()">Load Events</button>
+<ul id="eventList"></ul>
+
+<hr>
+
+<!-- ================= ADD EVENT ================= -->
+<h2>Add Event</h2>
+
+<input type="text" id="name" placeholder="Event Name"><br><br>
+<input type="date" id="date"><br><br>
+<input type="text" id="desc" placeholder="Description"><br><br>
+
+<button onclick="addEvent()">Add Event</button>
+
+<hr>
+
+<!-- ================= REGISTER ================= -->
+<h2>Register for Event</h2>
+
+<input type="text" id="userName" placeholder="Your Name"><br><br>
+<input type="email" id="email" placeholder="Your Email"><br><br>
+<input type="number" id="eventId" placeholder="Event ID"><br><br>
+
+<button onclick="registerUser()">Register</button>
+
+<hr>
+
+<!-- ================= VIEW REGISTRATIONS ================= -->
+<h2>Registered Users</h2>
+<button onclick="loadRegistrations()">View Registrations</button>
+
+<ul id="registrationList"></ul>
+
+<!-- ================= SCRIPT ================= -->
+<script>
+
+function loadEvents() {
+    fetch("http://localhost:8080/events")
+    .then(res => res.json())
+    .then(data => {
+        let list = document.getElementById("eventList");
+        list.innerHTML = "";
+
+        data.forEach(e => {
+            let li = document.createElement("li");
+            li.innerText = "ID: " + e.id + " | " + e.name + " - " + e.date;
+            list.appendChild(li);
+        });
+    })
+    .catch(err => console.error(err));
+}
+
+function addEvent() {
+    fetch("http://localhost:8080/events", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            name: document.getElementById("name").value,
+            date: document.getElementById("date").value,
+            description: document.getElementById("desc").value
+        })
+    })
+    .then(res => res.json())
+    .then(() => {
+        alert("Event Added!");
+        loadEvents();
+    })
+    .catch(err => console.error(err));
+}
+
+function registerUser() {
+    fetch("http://localhost:8080/register", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            userName: document.getElementById("userName").value,
+            email: document.getElementById("email").value,
+            eventId: document.getElementById("eventId").value
+        })
+    })
+    .then(res => res.json())
+    .then(() => {
+        alert("Registered Successfully!");
+    })
+    .catch(err => console.error(err));
+}
+
+function loadRegistrations() {
+    fetch("http://localhost:8080/register")
+    .then(res => res.json())
+    .then(data => {
+        let list = document.getElementById("registrationList");
+        list.innerHTML = "";
+
+        data.forEach(r => {
+            let li = document.createElement("li");
+            li.innerText = r.userName + " (" + r.email + ") - Event ID: " + r.eventId;
+            list.appendChild(li);
+        });
+    })
+    .catch(err => console.error(err));
+}
+
+</script>
+
+</body>
+</html>
