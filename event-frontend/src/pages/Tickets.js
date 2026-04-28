@@ -1,7 +1,6 @@
 import { useState } from "react";
-import dotenv from "dotenv";
-dotenv.config();
 
+const BASE_URL = import.meta.env.VITE_API_URL;
 function Tickets() {
   const [name, setName] = useState("");
   const [seats, setSeats] = useState("");
@@ -11,7 +10,7 @@ function Tickets() {
 
     const ticket = { name, seats };
 
-    await fetch(`${import.meta.env.VITE_API_URL}/tickets`, {
+    await fetch(`${BASE_URL}/tickets`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

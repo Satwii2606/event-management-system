@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import dotenv from "dotenv";
-dotenv.config();
+
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 function Events() {
   const [events, setEvents] = useState([]);
@@ -11,7 +11,7 @@ function Events() {
 
   // Fetch events
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/events`)
+    fetch(`${BASE_URL}/events`)
       .then(res => res.json())
       .then(data => setEvents(data))
       .catch(err => console.log(err));
